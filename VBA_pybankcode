@@ -1,0 +1,78 @@
+Sub Ticker()
+   For Each ws In Worksheets
+        Dim Ticker_Letters As String
+        Dim Ticker_Yearly_Change As Double
+        Dim Ticker_Percent_Change As Double
+        Dim Total_Stock_Volume As Long
+        Dim Opening_Value As Double
+        Dim Closing_Value As Double
+        Dim Ticker_Column As String
+        Dim Yearly_Change_Column As String
+        Dim Percent_Change_Column As String
+        Dim Total_Stock_Volume_Column As String
+        Dim Summary_Table As Integer
+        
+        'credit charges assingment (make its start on second row)
+        Summary_Table = 2
+        Ticker_Yearly_Change = 0
+        Ticker_Percent_Change = 0
+        Total_Stock_Volume = 0
+        Opening_Value = 0
+        Closing_Value = 0
+
+        
+        Ticker_Column = "Ticker"
+        Yearly_Change_Column = "Yearly Change"
+        Percent_Change_Column = "Percent Change"
+        Total_Stock_Volume_Column = "Total Stock Volume"
+
+        ws.Cells(1, 9).Value = Ticker_Column
+        ws.Cells(1, 10).Value = Yearly_Change_Column
+        ws.Cells(1, 11).Value = Percent_Change_Column
+        ws.Cells(1, 12).Value = Total_Stock_Volume_Column
+        'star counter bonus
+        Last_Row = ws.Cells(Rows.Count, 1).End(xlUp).Row
+        
+        
+        'next cells assignment/credit charges assignment
+        For i = 2 To Last_Row
+            If ws.Cells(i - 1, 1).Value <> ws.Cells(i, 1).Value Then
+                Opening_Value = ws.Cells(i, 3).Value
+
+            ElseIf ws.Cells(i + 1, 1).Value <> ws.Cells(i, 1).Value Then
+                Ticker_Letters = ws.Cells(i, 1).Value
+                Closing_Value = ws.Cells(i, 6)
+                Ticker_Yearly_Change = Closing_Value - Opening_Value
+
+                If Opening_Value <> 0 Then
+                    Ticker_Percent_Change = Round((((Closing_Value - Opening_Value) / Opening_Value) * 100), 2)
+                Else
+                    Ticker_Percent_Change = 0
+                End If
+                    'assigning colors by conditionals(assignment gradbook conditionals)
+                    If Ticker_Yearly_Change < 0 Then
+                        ws.Range("J" & Summary_Table).Interior.ColorIndex = 3
+                    ElseIf Ticker_Yearly_Change > 0 Then
+                        ws.Range("J" & Summary_Table).Interior.ColorIndex = 4
+                    Else
+                        ws.Range("J" & Summary_Table).Interior.ColorIndex = 0
+                    End If
+                       
+                Total_Stock_Volume = Total_Stock_Volume + ws.Cells(i, 7).Value
+                
+                'making summary table and putting the values in it
+                ws.Range("I" & Summary_Table).Value = Ticker_Letters
+                ws.Range("J" & Summary_Table).Value = Ticker_Yearly_Change
+                ws.Range("K" & Summary_Table).Value = Ticker_Percent_Change
+                ws.Range("L" & Summary_Table).Value = Total_Stock_Volume
+                
+                'go to next row//add one to the summar table row (credit charges assingment)
+                Summary_Table = Summary_Table + 1
+
+
+            End If
+        Next i
+    Next ws
+End Sub
+
+
